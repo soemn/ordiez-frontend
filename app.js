@@ -16,7 +16,8 @@ const vm = new Vue({
   `,
   methods: {
     getData() {
-      this.$http.get("http://rocky-bastion-42678.herokuapp.com/orders").then(
+      // http://localhost:3000/orders
+      this.$http.get("https://rocky-bastion-42678.herokuapp.com/orders").then(
         response => {
           this.showAllOrders = response.body
         },
@@ -100,6 +101,9 @@ Vue.component("modal", {
         this.order.order_id +
         "/feedbacks"
 
+      // let postAddress =
+      //   "http://localhost:3000/orders/" + this.order.order_id + "/feedbacks"
+
       {
         this.$http
           .post(postAddress, {
@@ -111,6 +115,8 @@ Vue.component("modal", {
               response.statusText
               response.headers.get("Expires")
               this.someData = response.body
+
+              alert("Success! Thank you for your feedback")
 
               vm.getData()
             },
