@@ -16,7 +16,7 @@ const vm = new Vue({
   `,
   methods: {
     getData() {
-      this.$http.get("https://rocky-bastion-42678.herokuapp.com/orders").then(
+      this.$http.get("http://rocky-bastion-42678.herokuapp.com/orders").then(
         response => {
           this.showAllOrders = response.body
         },
