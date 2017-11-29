@@ -16,7 +16,7 @@ const vm = new Vue({
   `,
   methods: {
     getData() {
-      this.$http.get("http://localhost:3000/orders").then(
+      this.$http.get("https://rocky-bastion-42678.herokuapp.com/orders").then(
         response => {
           this.showAllOrders = response.body
         },
@@ -95,9 +95,14 @@ Vue.component("modal", {
         payload.push(foodFeedback)
       })
 
+      let postAddress =
+        "https://rocky-bastion-42678.herokuapp.com/orders/" +
+        this.order.order_id +
+        "/feedbacks"
+
       {
         this.$http
-          .post("http://localhost:3000/orders/GO71/feedbacks", {
+          .post(postAddress, {
             feedbacks: payload
           })
           .then(
@@ -118,17 +123,5 @@ Vue.component("modal", {
     }
   }
 })
-
-// Vue.http.interceptors.push(function(request, next) {
-//   // modify method
-//   request.method = "POST"
-//
-//   // modify headers
-//   request.headers.set("X-CSRF-TOKEN", "TOKEN")
-//   request.headers.set("Authorization", "Bearer TOKEN")
-//
-//   // continue to next interceptor
-//   next()
-// })
 
 vm.getData()
