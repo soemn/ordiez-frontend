@@ -42,7 +42,7 @@ Vue.component("order-item", {
   },
   template: `
   <div>
-    {{order}}
+    <!-- {{order}} -->
     <p>Order ID: {{order.order_id}}</p>
     <p>Delivery Date: {{order.delivery_date}} at {{order.delivery_time}}</p>
     <div v-if="order.feedback_submitted">
@@ -53,12 +53,7 @@ Vue.component("order-item", {
       <modal v-if="mutableShowModal" @close="mutableShowModal = false" :order=order></modal>
     </div>
   </div>
-  `,
-  methods: {
-    submitFeedback: function() {
-      console.log("submited" + this.order.id)
-    }
-  }
+  `
 })
 
 Vue.component("modal", {
@@ -95,9 +90,60 @@ Vue.component("modal", {
         payload.push(foodFeedback)
       })
 
-      console.log(payload)
+      // console.log(payload)
+      // Vue.http.interceptors.push(function(request, next) {
+      //   // modify method
+      //   request.method = "POST"
+      //
+      //   // modify headers
+      //   request.headers.set("X-CSRF-TOKEN", "TOKEN")
+      //   request.headers.set("Authorization", "Bearer TOKEN")
+      //
+      //   // continue to next interceptor
+      //   next()
+      // })
+
+      {
+        this.$http
+          .post("http://localhost:3000/orders/GO71/feedbacks", {
+            feedbacks: payload
+          })
+          .then(
+            response => {
+              // get status
+              response.status
+
+              // get status text
+              response.statusText
+
+              // get 'Expires' header
+              response.headers.get("Expires")
+
+              // get body data
+              this.someData = response.body
+
+              vm.getData()
+            },
+            response => {
+              // error callback
+              console.log(response)
+            }
+          )
+      }
     }
   }
 })
+
+// Vue.http.interceptors.push(function(request, next) {
+//   // modify method
+//   request.method = "POST"
+//
+//   // modify headers
+//   request.headers.set("X-CSRF-TOKEN", "TOKEN")
+//   request.headers.set("Authorization", "Bearer TOKEN")
+//
+//   // continue to next interceptor
+//   next()
+// })
 
 vm.getData()
