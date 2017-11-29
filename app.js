@@ -45,6 +45,11 @@ Vue.component("order-item", {
     <!-- {{order}} -->
     <p>Order ID: {{order.order_id}}</p>
     <p>Delivery Date: {{order.delivery_date}} at {{order.delivery_time}}</p>
+    <ul v-for="item in order.order_items">
+      <li>
+        {{item.name}}
+      </li>
+    </ul>
     <div v-if="order.feedback_submitted">
       <strong><p>Thank you for your feedback!</p></strong>
     </div>
@@ -90,19 +95,6 @@ Vue.component("modal", {
         payload.push(foodFeedback)
       })
 
-      // console.log(payload)
-      // Vue.http.interceptors.push(function(request, next) {
-      //   // modify method
-      //   request.method = "POST"
-      //
-      //   // modify headers
-      //   request.headers.set("X-CSRF-TOKEN", "TOKEN")
-      //   request.headers.set("Authorization", "Bearer TOKEN")
-      //
-      //   // continue to next interceptor
-      //   next()
-      // })
-
       {
         this.$http
           .post("http://localhost:3000/orders/GO71/feedbacks", {
@@ -110,16 +102,9 @@ Vue.component("modal", {
           })
           .then(
             response => {
-              // get status
               response.status
-
-              // get status text
               response.statusText
-
-              // get 'Expires' header
               response.headers.get("Expires")
-
-              // get body data
               this.someData = response.body
 
               vm.getData()
