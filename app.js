@@ -24,10 +24,6 @@ const vm = new Vue({
           console.log(response)
         }
       )
-    },
-
-    showOrderItem() {
-      //
     }
   }
 })
@@ -49,9 +45,13 @@ Vue.component("order-item", {
     {{order}}
     <p>Order ID: {{order.order_id}}</p>
     <p>Delivery Date: {{order.delivery_date}} at {{order.delivery_time}}</p>
-
-    <button id="show-modal" @click="mutableShowModal = true">Give Feedback!</button>
-    <modal v-if="mutableShowModal" @close="mutableShowModal = false" :order=order></modal>
+    <div v-if="order.feedback_submitted">
+      <strong><p>Thank you for your feedback!</p></strong>
+    </div>
+    <div v-else>
+      <button id="show-modal" @click="mutableShowModal = true">Give Feedback!</button>
+      <modal v-if="mutableShowModal" @close="mutableShowModal = false" :order=order></modal>
+    </div>
   </div>
   `,
   methods: {
@@ -67,10 +67,35 @@ Vue.component("modal", {
       type: Object
     }
   },
+  data: function() {
+    return {
+      message: this.message,
+      delivery: this.delivery
+    }
+  },
   template: "#modal-template",
   methods: {
     submitFeedback: function() {
-      console.log("submited " + this.order.id)
+      let payload = []
+      let deliveryFeedback = {
+        ratable_id: this.order.id,
+        ratable_type: "DeliveryOrder",
+        rating: this.delivery,
+        comment: this.message
+      }
+      payload.push(deliveryFeedback)
+
+      this.order.order_items.map(food => {
+        foodFeedback = {
+          ratable_id: food.id,
+          ratable_type: "OrderItem",
+          rating: food.rating,
+          comment: food.comment
+        }
+        payload.push(foodFeedback)
+      })
+
+      console.log(payload)
     }
   }
 })
